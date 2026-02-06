@@ -150,7 +150,7 @@ class Ollama_Client(Client):
     def __init__(self, host: str = "http://localhost:11434", timeout:int=120) -> None:
         super().__init__(host, timeout=timeout)
 
-def convert_pdf_to_images(pdf_path:str, output_directory:str) -> list[str]:
+def convert_pdf_to_images(pdf_path:str, output_directory:str, zoom=4) -> list[str]:
     """
     Convert a PDF file to images using PyMuPDF library.
     Returns a list of paths to the generated images.
@@ -159,9 +159,11 @@ def convert_pdf_to_images(pdf_path:str, output_directory:str) -> list[str]:
     
     doc = pdf.open(pdf_path)
     paths_images = []
+    _zoom = pdf.Matrix(zoom, zoom)
 
     for i, page in enumerate(doc): #type: ignore
-        pix = page.get_pixmap()
+        pix = page.get_pixmap(matrix=_zoom)
+        
         path = f"{output_directory}/page_{i}.jpg"
         pix.save(path)
         paths_images.append(path)
