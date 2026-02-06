@@ -3,3 +3,4 @@ pillow-heif
 opencv-python
 requests
 ollama
+PyMuPDF
